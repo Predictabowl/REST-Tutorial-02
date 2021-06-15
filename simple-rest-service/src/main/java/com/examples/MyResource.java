@@ -22,4 +22,22 @@ public class MyResource {
     public String getIt() {
         return "Got it!";
     }
+    
+    @GET
+    @Produces(MediaType.TEXT_HTML)
+    public String getItHTM() {
+    	return "<html>\n"
+    			+ "<head>\n"
+    			+ "<title>Hello Jersey</title>\n"
+    			+ "</head>\n"
+    			+ "<body>Got it (HTML)!</body>\n"
+    			+ "</html>\n";
+    }
+    
+    @GET
+    @Produces(MediaType.TEXT_XML)
+    public String getItXML() {
+    	return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+    			+ "<hello>Got it (XML)!</hello>\n";
+    }
 }
