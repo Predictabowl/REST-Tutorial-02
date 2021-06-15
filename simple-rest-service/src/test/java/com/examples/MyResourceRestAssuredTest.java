@@ -1,6 +1,6 @@
 package com.examples;
 
-import static io.restassured.RestAssured.*;
+import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.equalTo;
 
 import javax.ws.rs.core.MediaType;
@@ -74,4 +74,5 @@ public class MyResourceRestAssuredTest {
 				.body("html.head.title", equalTo("Hello Jersey"))
 				.body("html.body", equalTo("Got it (HTML)!"));
 	}
+	
 }

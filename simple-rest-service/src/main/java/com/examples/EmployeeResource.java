@@ -1,32 +1,62 @@
 package com.examples;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.security.URIParameter;
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.NotFoundException;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.UriInfo;
 
 import com.examples.model.Employee;
-import com.examples.repositories.FakeEmployeeRepository;
+import com.examples.repositories.EmployeeRespository;
 
 @Path("employees")
 public class EmployeeResource {
+	
+	@Inject
+	private EmployeeRespository employeeRepository;
 
 	@GET
-	@Produces(MediaType.APPLICATION_XML)
+	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
 	@Path(value = "{id}")
 	public Employee getItXML(@PathParam("id") String id) {
-		return FakeEmployeeRepository.isntance.findOne(id)
+		return employeeRepository.findOne(id)
 				.orElseThrow(() -> new NotFoundException("Employee not found with id: "+id));
 	}
 	
 	@GET
-	@Produces(MediaType.APPLICATION_XML)
+	@Produces(value = {MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
 	public List<Employee> getAllEmployees(){
-		return FakeEmployeeRepository.isntance.findAll();
+		return employeeRepository.findAll();
 	}
 	
+	@GET
+	@Path(value = "count")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String count() {
+		return String.valueOf(employeeRepository.findAll().size());
+	}
+		
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response addEmployee(Employee employee, @Context UriInfo uriInfo) throws URISyntaxException {
+		Employee saved = employeeRepository.save(employee);
+		return Response
+				.created(new URI(uriInfo.getAbsolutePath()+"/"+saved.getEmployeeId()))
+				.entity(saved)
+				.build();
+	}
 }
