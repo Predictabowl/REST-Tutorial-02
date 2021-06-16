@@ -28,7 +28,7 @@ public class FakeEmployeeRepository implements EmployeeRespository {
 	}
 
 	@Override
-	public Employee save(Employee employee) {
+	public synchronized Employee save(Employee employee) {
 		// this is only for learning purposes, this ID generation is seriously bad
 		employee.setEmployeeId("ID"+(employees.size()+1));
 		employees.add(employee);
