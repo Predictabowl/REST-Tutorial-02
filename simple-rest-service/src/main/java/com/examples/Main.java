@@ -11,6 +11,8 @@ import com.examples.repositories.FakeEmployeeRepository;
 import java.io.IOException;
 import java.net.URI;
 
+import javax.inject.Singleton;
+
 /**
  * Main class.
  *
@@ -31,7 +33,9 @@ public class Main {
 					
 					@Override
 					protected void configure() {
-						bind(FakeEmployeeRepository.class).to(EmployeeRespository.class);
+						bind(FakeEmployeeRepository.class)
+							.to(EmployeeRespository.class)
+							.in(Singleton.class);
 					}
 				});
 

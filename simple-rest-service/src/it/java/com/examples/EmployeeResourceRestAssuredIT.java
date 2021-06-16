@@ -1,7 +1,6 @@
 package com.examples;
 
-import static io.restassured.RestAssured.*;
-import static org.hamcrest.CoreMatchers.endsWith;
+import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.equalTo;
 
 import javax.json.Json;
@@ -17,7 +16,6 @@ import org.junit.Test;
 
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
-import io.restassured.response.ValidatableResponse;
 
 public class EmployeeResourceRestAssuredIT {
 
