@@ -1,17 +1,21 @@
 package com.examples;
 
+import java.io.IOException;
+import java.net.URI;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import javax.inject.Singleton;
+
 import org.glassfish.grizzly.http.server.HttpServer;
+import org.glassfish.hk2.api.TypeLiteral;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
 
+import com.examples.model.Employee;
 import com.examples.repositories.EmployeeRespository;
-import com.examples.repositories.FakeEmployeeRepository;
-
-import java.io.IOException;
-import java.net.URI;
-
-import javax.inject.Singleton;
+import com.examples.repositories.InMemoryEmployeeRepository;
 
 /**
  * Main class.
@@ -33,9 +37,12 @@ public class Main {
 					
 					@Override
 					protected void configure() {
-						bind(FakeEmployeeRepository.class)
+						bind(InMemoryEmployeeRepository.class)
 							.to(EmployeeRespository.class)
 							.in(Singleton.class);
+						// With TypeLiteral we can bind generic classes
+						bindAsContract(new TypeLiteral<LinkedHashMap<String, Employee>>(){})
+							.to(new TypeLiteral<Map<String,Employee>>(){});
 					}
 				});
 

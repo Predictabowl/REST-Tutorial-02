@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="3" failures="0" name="com.examples.MyResourceRestAssuredTest" time="4.792" errors="0" skipped="0">
+<testsuite tests="3" failures="0" name="com.examples.MyResourceRestAssuredTest" time="3.334" errors="0" skipped="0">
   <properties>
     <property name="java.runtime.name" value="OpenJDK Runtime Environment"/>
     <property name="java.vm.version" value="16.0.1+9"/>
@@ -56,7 +56,7 @@
     <property name="sun.cpu.endian" value="little"/>
     <property name="java.vendor.version" value="AdoptOpenJDK-16.0.1+9"/>
   </properties>
-  <testcase classname="com.examples.MyResourceRestAssuredTest" name="test_getItHTML" time="4.464"/>
-  <testcase classname="com.examples.MyResourceRestAssuredTest" name="test_getItXML" time="0.257"/>
-  <testcase classname="com.examples.MyResourceRestAssuredTest" name="test_getIt" time="0.071"/>
+  <testcase classname="com.examples.MyResourceRestAssuredTest" name="test_getItHTML" time="2.655"/>
+  <testcase classname="com.examples.MyResourceRestAssuredTest" name="test_getItXML" time="0.607"/>
+  <testcase classname="com.examples.MyResourceRestAssuredTest" name="test_getIt" time="0.072"/>
 </testsuite>
