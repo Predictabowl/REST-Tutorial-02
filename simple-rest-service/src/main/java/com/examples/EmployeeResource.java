@@ -10,6 +10,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -58,5 +59,14 @@ public class EmployeeResource {
 				.created(new URI(uriInfo.getAbsolutePath()+"/"+saved.getEmployeeId()))
 				.entity(saved)
 				.build();
+	}
+	
+	@PUT
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path(value = "{id}")
+	public Employee updateEmployee(@PathParam("id") String id, Employee employee) {
+		employee.setEmployeeId(id);
+		return employeeRepository.save(employee);
 	}
 }
