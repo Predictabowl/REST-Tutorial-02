@@ -25,6 +25,8 @@ import org.mockito.Mock;
 import com.examples.exceptions.NotFoundMapper;
 import com.examples.model.Employee;
 import com.examples.repositories.EmployeeRespository;
+import com.examples.service.EmployeeService;
+import com.examples.service.EmployeeServiceImpl;
 
 import io.restassured.RestAssured;
 
@@ -33,7 +35,7 @@ public class EmployeeResourceRestAssuredTest extends JerseyTest{
 	private static final String FIXTURE_EMPLOYEES = "employees";
 	
 	@Mock
-	private EmployeeRespository employeeRepository;
+	private EmployeeService employeeService;
 	
 	@Override
 	protected Application configure() {
@@ -45,7 +47,7 @@ public class EmployeeResourceRestAssuredTest extends JerseyTest{
 				
 				@Override
 				protected void configure() {
-					bind(employeeRepository).to(EmployeeRespository.class);
+					bind(employeeService).to(EmployeeService.class);
 				}
 			});
 	}
@@ -64,7 +66,7 @@ public class EmployeeResourceRestAssuredTest extends JerseyTest{
 	
 	@Test
 	public void test_getItXML_success() {
-		when(employeeRepository.findOne("ID1"))
+		when(employeeService.getEmployeeById("ID1"))
 			.thenReturn(Optional.of(new Employee("ID1", "first employee", 1000)));
 		
 		given()
@@ -83,7 +85,7 @@ public class EmployeeResourceRestAssuredTest extends JerseyTest{
 	
 	@Test
 	public void test_getIt_JSON_success() {
-		when(employeeRepository.findOne("ID2"))
+		when(employeeService.findOne("ID2"))
 			.thenReturn(Optional.of(new Employee("ID2", "another employee", 1400)));
 		
 		given()
@@ -102,7 +104,7 @@ public class EmployeeResourceRestAssuredTest extends JerseyTest{
 	
 	@Test
 	public void test_getItXML_failure() {
-		when (employeeRepository.findOne("ID4")).thenReturn(Optional.empty());
+		when (employeeService.findOne("ID4")).thenReturn(Optional.empty());
 		
 		given()
 			.accept(MediaType.APPLICATION_XML)
@@ -117,7 +119,7 @@ public class EmployeeResourceRestAssuredTest extends JerseyTest{
 	
 	@Test
 	public void test_getIt_JSON_failure() {
-		when (employeeRepository.findOne("ID4")).thenReturn(Optional.empty());
+		when (employeeService.findOne("ID4")).thenReturn(Optional.empty());
 		
 		given()
 			.accept(MediaType.APPLICATION_JSON)
@@ -132,7 +134,7 @@ public class EmployeeResourceRestAssuredTest extends JerseyTest{
 	
 	@Test
 	public void test_getAllEmployees() {
-		when(employeeRepository.findAll()).thenReturn(
+		when(employeeService.findAll()).thenReturn(
 				Arrays.asList(new Employee("ID1", "first employee", 1000),
 						new Employee("ID2", "second employee", 2000),
 						new Employee("ID3", "third employee", 3000)));
@@ -160,7 +162,7 @@ public class EmployeeResourceRestAssuredTest extends JerseyTest{
 	
 	@Test
 	public void test_getAllEmployees_JSON() {
-		when(employeeRepository.findAll()).thenReturn(
+		when(employeeService.findAll()).thenReturn(
 				Arrays.asList(new Employee("ID1", "first employee", 1000),
 						new Employee("ID2", "second employee", 2000),
 						new Employee("ID3", "third employee", 3000)));
@@ -202,7 +204,7 @@ public class EmployeeResourceRestAssuredTest extends JerseyTest{
 	@Test
 	public void test_count() {
 		List<Employee> employees = Arrays.asList(new Employee(), new Employee());
-		when(employeeRepository.findAll()).thenReturn(employees);
+		when(employeeService.findAll()).thenReturn(employees);
 		
 		given()
 		.when()
@@ -219,7 +221,7 @@ public class EmployeeResourceRestAssuredTest extends JerseyTest{
 				.add("name", "passed name")
 				.add("salary", 2100)
 				.build();
-		when(employeeRepository.save(new Employee(null,"passed name",2100)))
+		when(employeeService.save(new Employee(null,"passed name",2100)))
 				.thenReturn(new Employee("ID5", "returned name", 1550));
 		
 		given()
@@ -239,12 +241,12 @@ public class EmployeeResourceRestAssuredTest extends JerseyTest{
 	}
 	
 	@Test
-	public void test_put_new_employee() {
+	public void test_put_update_employee() {
 		JsonObject jsonObject = Json.createObjectBuilder()
 				.add("name", "passed name")
 				.add("salary", 2100)
 				.build();
-		when(employeeRepository.save(new Employee("ID1","passed name",2100)))
+		when(employeeService.save(new Employee("ID1","passed name",2100)))
 				.thenReturn(new Employee("ID1", "returned name", 1550));
 		
 		given()

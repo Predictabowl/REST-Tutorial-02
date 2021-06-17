@@ -2,13 +2,11 @@ package com.examples;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.security.URIParameter;
 import java.util.List;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
-import javax.ws.rs.NotFoundException;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -17,44 +15,42 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
 import com.examples.model.Employee;
-import com.examples.repositories.EmployeeRespository;
+import com.examples.service.EmployeeService;
 
 @Path("employees")
 public class EmployeeResource {
 	
 	@Inject
-	private EmployeeRespository employeeRepository;
+	private EmployeeService employeeService;
 
 	@GET
 	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
 	@Path(value = "{id}")
 	public Employee getItXML(@PathParam("id") String id) {
-		return employeeRepository.findOne(id)
-				.orElseThrow(() -> new NotFoundException("Employee not found with id: "+id));
+		return employeeService.getEmployeeById(id);
 	}
 	
 	@GET
 	@Produces(value = {MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
 	public List<Employee> getAllEmployees(){
-		return employeeRepository.findAll();
+		return employeeService.allEmployees();
 	}
 	
 	@GET
 	@Path(value = "count")
 	@Produces(MediaType.TEXT_PLAIN)
 	public String count() {
-		return String.valueOf(employeeRepository.findAll().size());
+		return String.valueOf(employeeService.allEmployees().size());
 	}
 		
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response addEmployee(Employee employee, @Context UriInfo uriInfo) throws URISyntaxException {
-		Employee saved = employeeRepository.save(employee);
+		Employee saved = employeeService.addEmployee(employee);
 		return Response
 				.created(new URI(uriInfo.getAbsolutePath()+"/"+saved.getEmployeeId()))
 				.entity(saved)
@@ -66,7 +62,6 @@ public class EmployeeResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path(value = "{id}")
 	public Employee updateEmployee(@PathParam("id") String id, Employee employee) {
-		employee.setEmployeeId(id);
-		return employeeRepository.save(employee);
+		return employeeService.replaceEmployee(id,employee);
 	}
 }

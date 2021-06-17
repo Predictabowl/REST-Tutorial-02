@@ -181,5 +181,32 @@ public class EmployeeResourceRestAssuredIT {
 					,"salary",equalTo(950));
 			
 	}
+	
+	@Test
+	public void test_put_update_employee() {
+		JsonObject jsonEmployee = Json.createObjectBuilder()
+				.add("name", "updated employee")
+				.add("salary", 1950)
+				.build();
+		
+		given()
+			.contentType(MediaType.APPLICATION_JSON)
+			.body(jsonEmployee.toString())
+		.when()
+			.put(FIXTURE_EMPLOYEES+"/ID1")
+		.then()
+			.statusCode(Status.OK.getStatusCode());
+		
+		given()
+			.accept(MediaType.APPLICATION_JSON)
+		.when()
+			.get(FIXTURE_EMPLOYEES+"/ID1")
+		.then()
+			.statusCode(Status.OK.getStatusCode())
+			.assertThat()
+				.body("id", equalTo("ID1")
+					,"name",equalTo("updated employee")
+					,"salary", equalTo(1950));
+	}
 
 }
