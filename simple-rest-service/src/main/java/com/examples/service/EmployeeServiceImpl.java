@@ -21,24 +21,24 @@ public class EmployeeServiceImpl implements EmployeeService {
 	}
 
 	@Override
-	public List<Employee> allEmployees() {
+	public synchronized List<Employee> allEmployees() {
 		return repository.findAll();
 	}
 
 	@Override
-	public Employee getEmployeeById(String id) {
+	public synchronized Employee getEmployeeById(String id) {
 		return repository.findOne(id).orElseThrow(() -> new NotFoundException("Employee not found with id: "+id));
 	}
 
 	@Override
-	public Employee addEmployee(Employee employee) {
+	public synchronized Employee addEmployee(Employee employee) {
 		validateEmployee(employee);
 		return repository.save(employee);
 	}
 
 
 	@Override
-	public Employee replaceEmployee(String id, Employee employee) {
+	public synchronized Employee replaceEmployee(String id, Employee employee) {
 		validateEmployee(employee);
 		if(!repository.findOne(id).isPresent())
 				throw new NotFoundException("Employee not found with id: "+id);
@@ -46,15 +46,15 @@ public class EmployeeServiceImpl implements EmployeeService {
 		return repository.save(employee);
 	}
 
+	@Override
+	public synchronized Employee deleteEmployee(String id) {
+		return repository.delete(id);
+	}
+	
 	private void validateEmployee(Employee employee) {
 		if (Objects.isNull(employee))
 			throw new BadRequestException("Missing values for employee.");
 		if(!Objects.isNull(employee.getEmployeeId()))
 			throw new BadRequestException("Unexpected Id specification for employee, Id should be null.");
-	}
-
-	@Override
-	public Employee deleteEmployee(String id) {
-		return repository.delete(id);
 	}
 }
