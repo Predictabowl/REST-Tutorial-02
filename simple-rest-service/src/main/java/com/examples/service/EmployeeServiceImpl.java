@@ -52,4 +52,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 		if(!Objects.isNull(employee.getEmployeeId()))
 			throw new BadRequestException("Unexpected Id specification for employee, Id should be null.");
 	}
+
+	@Override
+	public Employee deleteEmployee(String id) {
+		return repository.delete(id);
+	}
 }

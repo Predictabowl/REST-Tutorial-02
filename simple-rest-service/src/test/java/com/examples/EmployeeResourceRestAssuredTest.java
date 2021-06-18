@@ -1,6 +1,7 @@
 package com.examples;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.emptyString;
 import static org.hamcrest.CoreMatchers.endsWith;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.mockito.Mockito.when;
@@ -225,6 +226,36 @@ public class EmployeeResourceRestAssuredTest extends JerseyTest{
 				.body("id", equalTo("ID1")
 					,"name",equalTo("returned name")
 					,"salary",equalTo(1550));
+	}
+	
+	@Test
+	public void test_delete_employee() {
+		when(employeeService.deleteEmployee("IDD"))
+			.thenReturn(new Employee("IDD", "deleted", 1200))
+			.thenReturn(null);
+		
+		given()
+		.when()
+			.delete(FIXTURE_EMPLOYEES+"/IDD")
+		.then()
+			.statusCode(Status.ACCEPTED.getStatusCode())
+			.assertThat()
+				.contentType(MediaType.APPLICATION_JSON)
+				.body("id", equalTo("IDD")
+					,"name",equalTo("deleted")
+					,"salary",equalTo(1200));
+		
+		//idempotency
+		given()
+		.when()
+			.delete(FIXTURE_EMPLOYEES+"/IDD")
+		.then()
+			.statusCode(Status.ACCEPTED.getStatusCode())
+			.assertThat()
+				.statusCode(Status.ACCEPTED.getStatusCode())
+				.body(emptyString());
+		
+				
 	}
 
 }

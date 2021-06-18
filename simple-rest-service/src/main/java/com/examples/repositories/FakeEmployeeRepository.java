@@ -35,4 +35,10 @@ public class FakeEmployeeRepository implements EmployeeRespository {
 		return employee;
 	}
 
+	@Override
+	public Employee delete(String id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

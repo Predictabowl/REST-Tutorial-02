@@ -74,5 +74,15 @@ public class InMemoryEmployeeRepositoryTest {
 				entry("ID2", new Employee("ID2", "second employee", 2000)),
 				entry("ID3", new Employee("ID3", "Mario", 11000)));
 	}
+	
+	@Test
+	public void test_delete_employee() {
+		Employee employee = repository.delete("ID2");
+		
+		assertThat(employee).isEqualTo(new Employee("ID2", "second employee", 2000));
+		assertThat(repositoryMap).containsOnly(
+				entry("ID1", new Employee("ID1", "first employee", 1000)),
+				entry("ID3", new Employee("ID3", "third employee", 3000)));
+	}
 
 }

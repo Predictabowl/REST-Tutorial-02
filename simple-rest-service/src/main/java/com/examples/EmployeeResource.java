@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -63,5 +64,14 @@ public class EmployeeResource {
 	@Path(value = "{id}")
 	public Employee updateEmployee(@PathParam("id") String id, Employee employee) {
 		return employeeService.replaceEmployee(id,employee);
+	}
+	
+	@DELETE
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("{id}")
+	public Response deleteEmployee(@PathParam("id") String id) {
+		return Response
+				.accepted(employeeService.deleteEmployee(id))
+				.build();
 	}
 }

@@ -208,5 +208,27 @@ public class EmployeeResourceRestAssuredIT {
 					,"name",equalTo("updated employee")
 					,"salary", equalTo(1950));
 	}
+	
+	@Test
+	public void test_delete_employee() {
+		given()
+			.accept(MediaType.APPLICATION_JSON)
+		.when()
+			.delete(FIXTURE_EMPLOYEES+"/ID1")
+		.then()
+			.statusCode(Status.ACCEPTED.getStatusCode())
+			.assertThat()
+				.contentType(MediaType.APPLICATION_JSON)
+				.body("id", equalTo("ID1")
+					,"name", equalTo("first employee")
+					,"salary", equalTo(1000));
+		
+		given()
+			.accept(MediaType.APPLICATION_JSON)
+		.when()
+			.get(FIXTURE_EMPLOYEES+"/ID1")
+		.then()
+			.statusCode(Status.NOT_FOUND.getStatusCode());
+	}
 
 }

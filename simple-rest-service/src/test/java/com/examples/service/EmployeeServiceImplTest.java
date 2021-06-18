@@ -148,5 +148,15 @@ public class EmployeeServiceImplTest {
 		verify(repository).findOne("IDE");
 		verifyNoMoreInteractions(repository);
 	}
+	
+	@Test
+	public void test_delete_employee_success() {
+		Employee toDelete = new Employee();
+		when(repository.delete("IDE")).thenReturn(toDelete);
+		
+		Employee employee = service.deleteEmployee("IDE");
+		
+		assertThat(employee).isSameAs(toDelete);
+	}
 
 }

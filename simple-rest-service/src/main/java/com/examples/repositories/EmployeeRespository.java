@@ -10,4 +10,5 @@ public interface EmployeeRespository {
 	public List<Employee> findAll();
 	public Optional<Employee> findOne(String id);
 	Employee save(Employee employee);
+	Employee delete(String id);
 }
