@@ -8,7 +8,6 @@ import static org.mockito.MockitoAnnotations.openMocks;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 import javax.json.Json;
 import javax.json.JsonObject;
@@ -22,11 +21,8 @@ import org.glassfish.jersey.test.JerseyTest;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import com.examples.exceptions.NotFoundMapper;
 import com.examples.model.Employee;
-import com.examples.repositories.EmployeeRespository;
 import com.examples.service.EmployeeService;
-import com.examples.service.EmployeeServiceImpl;
 
 import io.restassured.RestAssured;
 
@@ -42,7 +38,6 @@ public class EmployeeResourceRestAssuredTest extends JerseyTest{
 		openMocks(this);
 		
 		return new ResourceConfig(EmployeeResource.class)
-			.register(NotFoundMapper.class)
 			.register(new AbstractBinder() {
 				
 				@Override
@@ -67,7 +62,7 @@ public class EmployeeResourceRestAssuredTest extends JerseyTest{
 	@Test
 	public void test_getItXML_success() {
 		when(employeeService.getEmployeeById("ID1"))
-			.thenReturn(Optional.of(new Employee("ID1", "first employee", 1000)));
+			.thenReturn(new Employee("ID1", "first employee", 1000));
 		
 		given()
 			.accept(MediaType.APPLICATION_XML)
@@ -85,8 +80,8 @@ public class EmployeeResourceRestAssuredTest extends JerseyTest{
 	
 	@Test
 	public void test_getIt_JSON_success() {
-		when(employeeService.findOne("ID2"))
-			.thenReturn(Optional.of(new Employee("ID2", "another employee", 1400)));
+		when(employeeService.getEmployeeById("ID2"))
+			.thenReturn(new Employee("ID2", "another employee", 1400));
 		
 		given()
 			.accept(MediaType.APPLICATION_JSON)
@@ -101,40 +96,10 @@ public class EmployeeResourceRestAssuredTest extends JerseyTest{
 				.body("name", equalTo("another employee"))
 				.body("salary", equalTo(1400));
 	}
-	
-	@Test
-	public void test_getItXML_failure() {
-		when (employeeService.findOne("ID4")).thenReturn(Optional.empty());
 		
-		given()
-			.accept(MediaType.APPLICATION_XML)
-		.when()
-			.get(FIXTURE_EMPLOYEES+"/ID4")
-		.then()
-			.statusCode(404)
-			.assertThat()
-				.contentType(MediaType.TEXT_PLAIN)
-				.body(equalTo("Employee not found with id: ID4"));
-	}
-	
-	@Test
-	public void test_getIt_JSON_failure() {
-		when (employeeService.findOne("ID4")).thenReturn(Optional.empty());
-		
-		given()
-			.accept(MediaType.APPLICATION_JSON)
-		.when()
-			.get(FIXTURE_EMPLOYEES+"/ID4")
-		.then()
-			.statusCode(404)
-			.assertThat()
-				.contentType(MediaType.TEXT_PLAIN)
-				.body(equalTo("Employee not found with id: ID4"));
-	}
-	
 	@Test
 	public void test_getAllEmployees() {
-		when(employeeService.findAll()).thenReturn(
+		when(employeeService.allEmployees()).thenReturn(
 				Arrays.asList(new Employee("ID1", "first employee", 1000),
 						new Employee("ID2", "second employee", 2000),
 						new Employee("ID3", "third employee", 3000)));
@@ -162,7 +127,7 @@ public class EmployeeResourceRestAssuredTest extends JerseyTest{
 	
 	@Test
 	public void test_getAllEmployees_JSON() {
-		when(employeeService.findAll()).thenReturn(
+		when(employeeService.allEmployees()).thenReturn(
 				Arrays.asList(new Employee("ID1", "first employee", 1000),
 						new Employee("ID2", "second employee", 2000),
 						new Employee("ID3", "third employee", 3000)));
@@ -204,7 +169,7 @@ public class EmployeeResourceRestAssuredTest extends JerseyTest{
 	@Test
 	public void test_count() {
 		List<Employee> employees = Arrays.asList(new Employee(), new Employee());
-		when(employeeService.findAll()).thenReturn(employees);
+		when(employeeService.allEmployees()).thenReturn(employees);
 		
 		given()
 		.when()
@@ -221,7 +186,7 @@ public class EmployeeResourceRestAssuredTest extends JerseyTest{
 				.add("name", "passed name")
 				.add("salary", 2100)
 				.build();
-		when(employeeService.save(new Employee(null,"passed name",2100)))
+		when(employeeService.addEmployee(new Employee(null,"passed name",2100)))
 				.thenReturn(new Employee("ID5", "returned name", 1550));
 		
 		given()
@@ -246,7 +211,7 @@ public class EmployeeResourceRestAssuredTest extends JerseyTest{
 				.add("name", "passed name")
 				.add("salary", 2100)
 				.build();
-		when(employeeService.save(new Employee("ID1","passed name",2100)))
+		when(employeeService.replaceEmployee("ID1",new Employee(null,"passed name",2100)))
 				.thenReturn(new Employee("ID1", "returned name", 1550));
 		
 		given()

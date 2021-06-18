@@ -16,6 +16,8 @@ import org.glassfish.jersey.server.ResourceConfig;
 import com.examples.model.Employee;
 import com.examples.repositories.EmployeeRespository;
 import com.examples.repositories.InMemoryEmployeeRepository;
+import com.examples.service.EmployeeService;
+import com.examples.service.EmployeeServiceImpl;
 
 /**
  * Main class.
@@ -37,12 +39,12 @@ public class Main {
 					
 					@Override
 					protected void configure() {
-						bind(InMemoryEmployeeRepository.class)
-							.to(EmployeeRespository.class)
-							.in(Singleton.class);
+						bind(InMemoryEmployeeRepository.class).to(EmployeeRespository.class).in(Singleton.class);
+						bind(EmployeeServiceImpl.class).to(EmployeeService.class);
 						// With TypeLiteral we can bind generic classes
 						bindAsContract(new TypeLiteral<LinkedHashMap<String, Employee>>(){})
 							.to(new TypeLiteral<Map<String,Employee>>(){});
+						
 					}
 				});
 

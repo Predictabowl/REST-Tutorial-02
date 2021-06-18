@@ -49,8 +49,6 @@ public class EmployeeResourceConcurrencyIT{
 		server.shutdown();
 	}
 	
-	
-	
 	@Test
 	public void test_Post_new_employee_concurrent()  throws Exception{
 		JsonObject jsonEmployee = Json.createObjectBuilder()

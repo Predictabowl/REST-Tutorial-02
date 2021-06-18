@@ -3,6 +3,7 @@ package com.examples.service;
 import java.util.List;
 import java.util.Objects;
 
+import javax.inject.Inject;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
 
@@ -13,6 +14,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 	
 	private EmployeeRespository repository;
 	
+	@Inject
 	public EmployeeServiceImpl(EmployeeRespository repository) {
 		super();
 		this.repository = repository;
@@ -34,12 +36,6 @@ public class EmployeeServiceImpl implements EmployeeService {
 		return repository.save(employee);
 	}
 
-	private void validateEmployee(Employee employee) {
-		if (Objects.isNull(employee))
-			throw new BadRequestException("Missing values for employee.");
-		if(!Objects.isNull(employee.getEmployeeId()))
-			throw new BadRequestException("Unexpected Id specification for employee, Id should be null.");
-	}
 
 	@Override
 	public Employee replaceEmployee(String id, Employee employee) {
@@ -50,4 +46,10 @@ public class EmployeeServiceImpl implements EmployeeService {
 		return repository.save(employee);
 	}
 
+	private void validateEmployee(Employee employee) {
+		if (Objects.isNull(employee))
+			throw new BadRequestException("Missing values for employee.");
+		if(!Objects.isNull(employee.getEmployeeId()))
+			throw new BadRequestException("Unexpected Id specification for employee, Id should be null.");
+	}
 }
